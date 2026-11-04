@@ -1,0 +1,362 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Moodscape | Your Emotional Space</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: linear-gradient(135deg,#f8efff,#fff4f0,#eef2ff);
+  color: #38334b;
+  min-height: 100vh;
+}
+
+header {
+  padding: 25px 8%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-family: 'Playfair Display',serif;
+  font-size: 28px;
+  color: #7956a8;
+}
+
+header span { color: #867a91; font-size: 13px; }
+
+main {
+  width: 90%;
+  max-width: 1000px;
+  margin: 30px auto;
+}
+
+.hero { text-align: center; margin-bottom: 35px; }
+
+.hero h1 {
+  font-family: 'Playfair Display',serif;
+  font-size: clamp(32px,5vw,48px);
+  margin-bottom: 12px;
+}
+
+.hero p { color: #81758f; }
+
+.card {
+  background: rgba(255,255,255,.8);
+  border: 1px solid #ffffff;
+  border-radius: 22px;
+  padding: 26px;
+  margin-bottom: 22px;
+  box-shadow: 0 8px 30px rgba(110,80,140,.07);
+}
+
+h2 {
+  font-family: 'Playfair Display',serif;
+  margin-bottom: 18px;
+  font-size: 23px;
+}
+
+.moods {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 12px;
+}
+
+.mood {
+  padding: 17px 8px;
+  border: 1px solid #eee5f5;
+  background: #fff;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: .2s;
+  color: #554966;
+  font: inherit;
+}
+
+.mood:hover, .mood.active {
+  border: 2px solid #a98bd1;
+  background: #f4edff;
+  transform: translateY(-3px);
+}
+
+.mood b { display: block; font-size: 28px; margin-bottom: 6px; }
+
+label { display: block; margin: 18px 0 10px; font-weight: 600; }
+
+input[type="range"] { width: 100%; accent-color: #9572bc; }
+
+textarea {
+  width: 100%;
+  min-height: 100px;
+  resize: vertical;
+  padding: 15px;
+  border: 1px solid #e8dff0;
+  border-radius: 13px;
+  font: inherit;
+  outline: none;
+}
+
+textarea:focus { border-color: #a98bd1; }
+
+.primary {
+  margin-top: 18px;
+  border: 0;
+  background: #8866ad;
+  color: white;
+  padding: 13px 24px;
+  border-radius: 30px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.primary:hover { background: #704e98; }
+
+.result {
+  background: #f5effc;
+  border-radius: 16px;
+  padding: 18px;
+  line-height: 1.8;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.history-item {
+  padding: 13px 0;
+  border-bottom: 1px solid #eee8f3;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.muted { color: #91869a; font-size: 13px; }
+
+footer {
+  text-align: center;
+  padding: 30px;
+  color: #95899e;
+  font-size: 13px;
+}
+
+@media(max-width:650px) {
+  .grid { grid-template-columns: 1fr; }
+  .moods { grid-template-columns: repeat(2,1fr); }
+  header { padding: 20px 5%; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">moodscape.</div>
+  <span>Your little corner of calm ✨</span>
+</header>
+
+<main>
+
+<section class="hero">
+  <h1>How are you feeling today?</h1>
+  <p>Take a moment for yourself. Every emotion deserves space.</p>
+</section>
+
+<section class="card">
+  <h2>Choose your current mood</h2>
+
+  <div class="moods" id="moods">
+    <button class="mood" data-mood="Happy"><b>😊</b>Happy</button>
+    <button class="mood" data-mood="Sad"><b>🥺</b>Sad</button>
+    <button class="mood" data-mood="Anxious"><b>😟</b>Anxious</button>
+    <button class="mood" data-mood="Angry"><b>😤</b>Angry</button>
+    <button class="mood" data-mood="Calm"><b>😌</b>Calm</button>
+    <button class="mood" data-mood="Tired"><b>😴</b>Tired</button>
+  </div>
+
+  <label for="intensity">How intense is this feeling? <span id="level">3</span>/5</label>
+  <input type="range" id="intensity" min="1" max="5" value="3">
+
+  <label for="journal">Write whatever is on your mind...</label>
+  <textarea id="journal" maxlength="500"
+    placeholder="Today I feel..."></textarea>
+
+  <button class="primary" id="save">Save my mood ✨</button>
+  <p class="muted" id="status" aria-live="polite"></p>
+</section>
+
+<div class="grid">
+  <section class="card">
+    <h2>Your mood companion 🌷</h2>
+    <div class="result" id="recommendation">
+      Select a mood to discover activities that might help you.
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>A little reminder 💌</h2>
+    <div class="result" id="affirmation">
+      You deserve kindness, especially from yourself.
+    </div>
+  </section>
+</div>
+
+<section class="card">
+  <h2>Your mood journey 📖</h2>
+  <p class="muted" id="count">No mood entries yet.</p>
+  <div id="history"></div>
+  <button class="primary" id="clear" style="background:#b7798d">
+    Clear mood history
+  </button>
+</section>
+
+</main>
+
+<footer>
+  Made with ♡ for every version of you. <br><br>
+  Moodscape is a self-reflection tool, not a mental health diagnosis.
+</footer>
+
+<script>
+const moodData = {
+  Happy: {
+    activities: ["Try a creative hobby 🎨","Share your happiness with a friend 💌","Explore somewhere new 🌻"],
+    affirmation: "You deserve to enjoy every little moment of happiness."
+  },
+  Sad: {
+    activities: ["Listen to your favourite songs 🎧","Talk to someone you trust ☎️","Write down what you feel 📖"],
+    affirmation: "It's okay to have difficult days. You don't have to rush your healing."
+  },
+  Anxious: {
+    activities: ["Try slow, comfortable breathing 🌿","Take a peaceful walk 🚶","Write down one thing at a time ✍️"],
+    affirmation: "You don't need to figure everything out right now."
+  },
+  Angry: {
+    activities: ["Take a little space before reacting 🌱","Write down your thoughts 📝","Try a gentle walk 🚶"],
+    affirmation: "Your feelings matter. Give yourself room to process them."
+  },
+  Calm: {
+    activities: ["Enjoy a few quiet moments ☁️","Read something you love 📚","Practice gratitude 🌷"],
+    affirmation: "Protect your peace. You deserve moments like this."
+  },
+  Tired: {
+    activities: ["Take a proper break 🛌","Drink some water 💧","Step away from screens for a while 🌙"],
+    affirmation: "Rest is productive too. You are allowed to slow down."
+  }
+};
+
+let selectedMood = "";
+
+const moodButtons = document.querySelectorAll(".mood");
+const intensity = document.getElementById("intensity");
+const journal = document.getElementById("journal");
+const recommendation = document.getElementById("recommendation");
+const affirmation = document.getElementById("affirmation");
+
+let entries = JSON.parse(localStorage.getItem("moodscapeEntries") || "[]");
+
+moodButtons.forEach(button => {
+  button.addEventListener("click", () => {
+    moodButtons.forEach(b => b.classList.remove("active"));
+    button.classList.add("active");
+
+    selectedMood = button.dataset.mood;
+    const data = moodData[selectedMood];
+
+    recommendation.innerHTML =
+      "<strong>Activities for your mood:</strong><br>" +
+      data.activities.map(item => "• " + item).join("<br>");
+
+    affirmation.textContent = data.affirmation;
+  });
+});
+
+intensity.addEventListener("input", () => {
+  document.getElementById("level").textContent = intensity.value;
+});
+
+document.getElementById("save").addEventListener("click", () => {
+  if (!selectedMood) {
+    alert("Please select your mood first!");
+    return;
+  }
+
+  const entry = {
+    mood: selectedMood,
+    intensity: Number(intensity.value),
+    note: journal.value.trim(),
+    date: new Date().toLocaleString()
+  };
+
+  entries.unshift(entry);
+  localStorage.setItem("moodscapeEntries", JSON.stringify(entries));
+
+  journal.value = "";
+  document.getElementById("status").textContent =
+    "Your mood has been saved successfully ♡";
+
+  renderHistory();
+});
+
+function renderHistory() {
+  const history = document.getElementById("history");
+  const count = document.getElementById("count");
+
+  count.textContent = `${entries.length} mood check-in(s) saved`;
+
+  history.innerHTML = "";
+
+  if (entries.length === 0) {
+    history.textContent = "Your mood journey starts here. 🌷";
+    return;
+  }
+
+  entries.slice(0,10).forEach(entry => {
+    const item = document.createElement("div");
+    item.className = "history-item";
+
+    const details = document.createElement("span");
+    details.textContent = `${entry.mood} · Intensity ${entry.intensity}/5`;
+
+    const date = document.createElement("span");
+    date.className = "muted";
+    date.textContent = entry.date;
+
+    item.append(details, date);
+    history.appendChild(item);
+
+    if (entry.note) {
+      const note = document.createElement("p");
+      note.className = "muted";
+      note.style.padding = "8px 0";
+      note.textContent = entry.note;
+      history.appendChild(note);
+    }
+  });
+}
+
+document.getElementById("clear").addEventListener("click", () => {
+  if (confirm("Are you sure you want to delete your mood history?")) {
+    entries = [];
+    localStorage.removeItem("moodscapeEntries");
+    renderHistory();
+    document.getElementById("status").textContent = "Mood history cleared.";
+  }
+});
+
+renderHistory();
+</script>
+
+</body>
+</html>
