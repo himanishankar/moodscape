@@ -7,6 +7,7 @@ Moodscape is a mood-tracking and self-reflection web application designed to hel
 Whether you're having a wonderful day, feeling overwhelmed, or simply need a moment to yourself, Moodscape gives you a little space to pause, reflect, and reconnect with yourself.
 
 ---
+---
 
 ## ✨ Features
 
