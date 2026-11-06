@@ -141,7 +141,7 @@ The current version stores information locally in the browser. Avoid entering se
 
 ## 👩‍💻 Developer
 
-**Himani Shankar**
+**Himani**
 
 Computer Science Engineering Student
 
